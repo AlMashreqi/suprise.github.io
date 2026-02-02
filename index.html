@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Valentine</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <style>
+      body {
+        height: 100vh;
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+        text-align: center;
+      }
+
+      h1 {
+        color: white;
+        font-size: 2.2rem;
+        margin-bottom: 40px;
+        padding: 0 20px;
+      }
+
+      #yesBtn {
+        padding: 18px 42px;
+        font-size: 1.4rem;
+        border-radius: 14px;
+        border: none;
+        background-color: #ff4d6d;
+        color: white;
+        cursor: pointer;
+        transition: transform 0.25s ease;
+        z-index: 2;
+      }
+
+      #noBtn {
+        position: absolute;
+        padding: 14px 32px;
+        font-size: 1.1rem;
+        border-radius: 14px;
+        border: none;
+        background-color: white;
+        cursor: pointer;
+        transition:
+          transform 0.15s ease,
+          left 0.15s ease,
+          top 0.15s ease;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <h1 id="question">Araina, will you be my Valentine?</h1>
+
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No</button>
+
+    <script>
+      const yesBtn = document.getElementById("yesBtn");
+      const noBtn = document.getElementById("noBtn");
+      const question = document.getElementById("question");
+
+      const noTexts = [
+        "Are you sure?",
+        "Wrong choice",
+        "Not that one",
+        "Please 🥺",
+        "Still trying?",
+        "This hurts",
+        "Okay wow",
+      ];
+
+      let noScale = 1;
+      let yesScale = 1;
+      let attempts = 0;
+
+      function moveNoButton() {
+        const padding = 20;
+        const maxX = window.innerWidth - noBtn.offsetWidth - padding;
+        const maxY = window.innerHeight - noBtn.offsetHeight - padding;
+
+        const x = Math.random() * maxX;
+        const y = Math.random() * maxY;
+
+        noBtn.style.left = `${x}px`;
+        noBtn.style.top = `${y}px`;
+      }
+
+      function punishNo() {
+        attempts++;
+
+        noBtn.textContent = noTexts[attempts % noTexts.length];
+
+        // Shrink NO
+        noScale *= 0.85;
+        noBtn.style.transform = `scale(${noScale})`;
+
+        // Grow YES
+        yesScale *= 1.2;
+        yesBtn.style.transform = `scale(${yesScale})`;
+
+        moveNoButton();
+      }
+
+      // Initial position
+      moveNoButton();
+
+      // Desktop
+      noBtn.addEventListener("mouseenter", punishNo);
+      noBtn.addEventListener("click", punishNo);
+
+      // Mobile / Touch
+      noBtn.addEventListener(
+        "touchstart",
+        (e) => {
+          e.preventDefault();
+          punishNo();
+        },
+        { passive: false },
+      );
+
+      yesBtn.addEventListener("click", () => {
+        question.textContent = "I love you so much, meri jaan!";
+        yesBtn.remove();
+        noBtn.remove();
+
+        const hearts = document.createElement("div");
+        hearts.textContent = "💖💖💖💖💖";
+        hearts.style.fontSize = "3rem";
+        hearts.style.marginTop = "20px";
+        document.body.appendChild(hearts);
+      });
+    </script>
+  </body>
+</html>
